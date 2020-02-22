@@ -68,9 +68,26 @@ x= linspace(0,L,length(V));
 figure('Name','Question 1a');  %Optional
 plot(x, V,'LineWidth',3);
 grid;
-title('1a: 1-D Plot of V(x)', 'FontSize',25);
+title('1-D Plot of V(x)', 'FontSize',25);
 xlabel('x (distance)','FontSize',20);
 ylabel('Voltage  (Volts)','FontSize',20);
+
+
+%-------------------------------------------------------------------------- 
+% To plot the node voltage:
+%-------------------------------------------------------------------------- 
+
+for i = 1:L
+   V_surf(i,:) = V;
+end
+
+figure('Name','Question 1a');  %Optional
+surf(V_surf);
+grid;
+title('2-D Plot of V(x)', 'FontSize',25);
+xlabel('x (distance)','FontSize',20);
+ylabel('y (distance)','FontSize',20);
+zlabel('Voltage  (V)','FontSize',20);
 
 
 

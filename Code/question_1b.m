@@ -1,7 +1,7 @@
 clc
 clear all;
 
-%Question 1a
+%Question 1b
 %============
 %2-D Case 
 % del^2 V = 0
@@ -18,8 +18,8 @@ W = 20;         %Initialize the width
 G = sparse(W*L,W*L);       %Initialize the G matrix 
 F = sparse(W*L,1);         %Initialize the F matrix 
         
-delta_x = 1;     % Define parameters for FD method 
-delta_y = 1;
+delta_x = 500;     % Define parameters for FD method 
+delta_y = 500;
 V0 = 5;          % Define boundary voltage value 
 
 
@@ -46,7 +46,7 @@ for i=1:L
         elseif j == 1 || j == W
             G(n,n) = 1;
             F(n,1) = 0;
-        %Solutions to the 1D Finite Difference Equation 
+        %Solutions to the 2D Finite Difference Equation 
         else
             G(n,n) =  -2/(delta_x)^2 + -2/(delta_y)^2;
             G(n,nxm) = 1/(delta_x)^2;
@@ -79,13 +79,16 @@ end
 %Indexing to plot the voltage 
 [X,Y] = meshgrid(1:W,1:L);
 
+a = W;
+b = L/2; 
+
 %-------------------------------------------------------------------------- 
 % Plot the node voltage:
 %-------------------------------------------------------------------------- 
 figure('Name','Question 1b: Simulated Solution');  %Optional
 surf(X,Y,V_solution);
 grid;
-title('1b: 2-D Plot of Simulated V(x)', 'FontSize',20);
+title('1b: 2-D Plot of Simulated V(x,y)', 'FontSize',20);
 xlabel('y (distance)','FontSize',13);
 ylabel('x (distance)','FontSize',13);
 
@@ -98,20 +101,19 @@ ylabel('x (distance)','FontSize',13);
 
 % For the summation, if n > 200, a result of NaN is returned, thus a small
 % number of itterations is used
-num_itter = 80;      %Number of itterations ot calculate the sum
-a = W;
-b = L; 
+num_itter = 140;      %Number of itterations ot calculate the sum
+
 
 %Initialize an ananymous function of the analytical solution sum componeents 
 V_actual_sum = @(x,y,n) (1/n)*(cosh((n*pi*x)/a)* sin((n*pi*y)/a))/(cosh((n*pi*b)/a));
 
 
-V_calc = zeros(L, W);
+V_calc = zeros(L+1, W+1);
 
-for x=-1:L
-    for y=1:W
+for x=0:L
+    for y=0:W
         for n = 1:2:2*num_itter
-            V_calc(x,y) = V_calc(x,y) + V_actual_sum(x,y,n);
+            V_calc(x+1,y+1) = V_calc(x+1,y+1) + V_actual_sum(x-(L)/2,y,n);
         end
     end
 end
@@ -121,15 +123,20 @@ end
 V_calc = V_calc*((4*V0)/pi);
 
 
+%Indexing to plot the voltage 
+[X2,Y2] = meshgrid(0:W,0:L);
 %-------------------------------------------------------------------------- 
 % To plot the analytical solution:
 %-------------------------------------------------------------------------- 
 figure('Name','Question 1b: Analytical Solution');  %Optional
-surf(X,Y,V_calc);
+surf(X2,Y2,V_calc);
 grid;
-title('1b: 2-D Plot of the analytical solution of V(x)', 'FontSize',20);
+title('1b: 2-D Plot of the analytical solution of V(x,y)', 'FontSize',20);
 xlabel('y (distance)','FontSize',13);
 ylabel('x (distance)','FontSize',13);
+
+
+
 
 
 
